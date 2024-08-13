@@ -15,7 +15,7 @@ import app from "./app";
 
 // Connect to the MongoDB database
 mongoose
-  .connect(process.env.DATABASE_ATLAS as string)
+  .connect(process.env.DATABASE_LOCAL as string)
   .then(() => console.log("DB connection successful!"));
 
 // Define the port to listen on
