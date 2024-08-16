@@ -11,7 +11,7 @@ const ArtistSchema: Schema = new Schema(
     required: [true, "A song must have an artist"],
     trim: true,
     minlength: [1, "Artist name must have at least 1 character"],
-    maxlength: [100, "Artist name must have less or equal to 100 characters"], },
+    maxLength: [100, "Artist name must have less or equal to 100 characters"], },
     songs: [{ type: Schema.Types.ObjectId, ref: "Song" }], // Reference to Song model
     albums: [{ type: Schema.Types.ObjectId, ref: "Album" }], // Reference to Album model
   },

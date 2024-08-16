@@ -46,7 +46,7 @@ const sendErrorProd = (err: AppError, res: Response): void => {
       message: err.message,
     });
   } else {
-    // Programming or other unknown error: do not leak error details
+    // Programming or other unknown error
     // 1) Log error
     console.error("ERROR", err);
     // 2) Send generic message

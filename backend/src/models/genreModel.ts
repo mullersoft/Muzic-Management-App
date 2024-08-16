@@ -12,7 +12,7 @@ const GenreSchema: Schema = new Schema(
     required: [true, "A song must have a genre"],
     trim: true,
     minlength: [1, "Genre name must have at least 1 character"],
-    maxlength: [50, "Genre name must have less or equal to 50 characters"], },
+    maxLength: [50, "Genre name must have less or equal to 50 characters"], },
     songs: [{ type: Schema.Types.ObjectId, ref: "Song" }], // Reference to Song model
   },
   { timestamps: true }

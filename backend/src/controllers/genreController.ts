@@ -5,9 +5,8 @@ import AppError from "../utils/appError";
 
 // Create a new genre
 export const createGenre = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { name } = req.body;
-    const newGenre = await Genre.create({ name });
+  async (req, res, next) => {
+    const newGenre = await Genre.create(req.body);
     res.status(201).json({
       status: "success",
       data: { newGenre },
@@ -16,8 +15,11 @@ export const createGenre = catchAsync(
 );
 
 // List all genres
-export const listGenres = catchAsync(async (req: Request, res: Response) => {
-  const genres = await Genre.find();
+export const listGenres = catchAsync(async (req, res) => {
+  const genres = await Genre.find().populate({
+    path: "songs",
+    select: "title",
+  });
   res.status(200).json({
     result: genres.length,
     status: "success",
@@ -27,8 +29,11 @@ export const listGenres = catchAsync(async (req: Request, res: Response) => {
 
 // Get genre by ID
 export const getGenreById = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const genre = await Genre.findById(req.params.id);
+  async (req, res, next) => {
+    const genre = await Genre.findById(req.params.id).populate({
+      path: "songs",
+      select: "title",
+    });;
     if (!genre) {
       return next(new AppError("No genre found with that ID", 404));
     }
@@ -41,7 +46,7 @@ export const getGenreById = catchAsync(
 
 // Update a genre
 export const updateGenre = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req, res, next) => {
     const { name } = req.body;
     const updatedGenre = await Genre.findByIdAndUpdate(
       req.params.id,

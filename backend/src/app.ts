@@ -4,7 +4,7 @@ import songRoutes from "./routes/songRoutes";
 import artistRoutes from "./routes/artistRoutes";
 import albumRoutes from "./routes/albumRoutes";
 import genreRoutes from "./routes/genreRoutes";
-
+import statisticsRoutes from "./routes/statisticsRoutes";
 import AppError from "./utils/appError";
 import globalErrorHandler from "./controllers/errorController";
 
@@ -24,7 +24,8 @@ app.use("/api/v1/songs", songRoutes);
 app.use("/api/v1/artists", artistRoutes);;
 app.use("/api/v1/albums", albumRoutes);
 app.use("/api/v1/genres", genreRoutes);
-;
+app.use("/api/v1/statistics", statisticsRoutes);
+
 
 // Handling unhandled routes
 app.all("*", (req, res, next) => {
