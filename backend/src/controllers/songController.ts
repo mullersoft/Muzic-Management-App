@@ -49,41 +49,64 @@ export const createSong = catchAsync(
   }
 );
 
-export const listSongs = catchAsync(async (req, res) => {
+
+
+export const listSongs = catchAsync(async (req: Request, res: Response) => {
   const { title, artist, genre, album } = req.query;
 
   // Building the filter object
   const filter: any = {};
 
   if (title) {
-    filter.title = { $regex: title, $options: "i" }; // Case-insensitive search
+    filter.title = { $regex: title as string, $options: "i" }; // Case-insensitive search
   }
 
   if (artist) {
-    filter.artists = artist; 
+    if (Array.isArray(artist)) {
+      // If artist is an array of strings
+      filter.artists = { $in: artist };
+    } else if (typeof artist === "string") {
+      // If artist is a single string
+      const artistsArray = artist.split(","); // Split the artist string into an array
+      filter.artists = { $in: artistsArray }; // Use $in to match any artist in the array
+    }
   }
 
   if (genre) {
-    filter.genres = genre; 
+    if (Array.isArray(genre)) {
+      // If genre is an array of strings
+      filter.genres = { $in: genre };
+    } else if (typeof genre === "string") {
+      // If genre is a single string
+      const genresArray = genre.split(","); // Split the genre string into an array
+      filter.genres = { $in: genresArray }; // Use $in to match any genre in the array
+    }
   }
 
   if (album) {
-    filter.album = album; 
+    if (Array.isArray(album)) {
+      // If album is an array of strings
+      filter.album = { $in: album };
+    } else if (typeof album === "string") {
+      // If album is a single string
+      const albumsArray = album.split(","); // Split the album string into an array
+      filter.album = { $in: albumsArray }; // Use $in to match any album in the array
+    }
   }
 
   // Fetch the songs based on the filter
   const songs = await Song.find(filter)
     .populate({
       path: "artists",
-      select: "name", 
+      select: "name",
     })
     .populate({
       path: "genres",
-      select: "name", 
+      select: "name",
     })
     .populate({
       path: "album",
-      select: "name", 
+      select: "name",
     });
 
   res.status(200).json({
@@ -92,6 +115,11 @@ export const listSongs = catchAsync(async (req, res) => {
     data: { songs },
   });
 });
+
+
+
+
+
 
 
 // Get a song by ID
