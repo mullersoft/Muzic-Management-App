@@ -31,8 +31,8 @@ const AdminDashboard: React.FC = () => {
         return <ArtistManagement />;
       case 'albums':
         return <AlbumManagement />;
-      default:
-        return <SongManagement />;
+      // default:
+      //   return <SongManagement />;
     }
   };
 

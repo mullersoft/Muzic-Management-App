@@ -26,10 +26,15 @@ const Header: React.FC = () => {
       <NavLinks>
         <Link to="/">Home</Link>
         <Link to="/admin">Admin</Link>
-        <Link to="/songs">Songs</Link>
+        <Link to="#">About</Link>
+      
+
+
+
+        {/* <Link to="/songs">Songs</Link>
         <Link to="/albums">Albums</Link>
         <Link to="/artists">Artists</Link>
-        <Link to="/genres">Genres</Link>
+        <Link to="/genres">Genres</Link> */}
       </NavLinks>
     </HeaderContainer>
   );
