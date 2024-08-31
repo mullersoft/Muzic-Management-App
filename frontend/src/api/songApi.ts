@@ -5,7 +5,7 @@ import axios from "axios";
 // Existing API functions
 export const fetchSongsApi = async () => {
   const response = await axios.get("/api/v1/songs");
-  return response.data.data.songs; // Adjust to return the songs array
+  return response.data.data.songs; 
 };
 
 export const fetchSongApi = async (id: string) => {

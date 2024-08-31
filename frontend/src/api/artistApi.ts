@@ -6,8 +6,7 @@ const API_URL = "/api/v1/artists";
 // Fetch all artists
 export const fetchArtists = async (): Promise<IArtist[]> => {
   const response = await axios.get(API_URL);
-  console.log("Fetched artists:", response.data); // Log data for debugging
-  return response.data.data.artists; // Adjust based on actual API response structure
+  return response.data.data.artists; 
 };
 
 // Create a new artist

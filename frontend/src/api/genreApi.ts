@@ -6,7 +6,7 @@ const API_URL = "/api/v1/genres";
 export const fetchGenres = async (): Promise<IGenre[]> => {
   const response = await axios.get(API_URL);
   console.log("Fetched genres:", response.data);
-  return response.data.data.genres; // Adjust based on your API response structure
+  return response.data.data.genres; 
 };
 
 export const createGenre = async (
