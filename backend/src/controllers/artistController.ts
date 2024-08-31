@@ -7,7 +7,7 @@ import AppError from "../utils/appError";
 
 // Create a new artist
 export const createArtist = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req, res, next) => {
     const newArtist = await Artist.create(req.body);
     res.status(201).json({
       status: "success",

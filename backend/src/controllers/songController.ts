@@ -116,12 +116,6 @@ export const listSongs = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
-
-
-
-
-
 // Get a song by ID
 export const getSongById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

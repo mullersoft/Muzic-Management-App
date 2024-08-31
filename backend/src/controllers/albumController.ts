@@ -44,10 +44,10 @@ export const getAlbumById = catchAsync(
 // Update an album
 export const updateAlbum = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { name, songs } = req.body;
+    const { name, songs,artists } = req.body;
     const updatedAlbum = await Album.findByIdAndUpdate(
       req.params.id,
-      { name, songs },
+      { name, songs,artists },
       { new: true }
     );
     if (!updatedAlbum) {
