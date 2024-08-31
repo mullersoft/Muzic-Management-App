@@ -4,17 +4,17 @@ import axios from "axios";
 
 // Existing API functions
 export const fetchSongsApi = async () => {
-  const response = await axios.get("/api/v1/songs"); // Adjust endpoint as necessary
-  return response.data;
+  const response = await axios.get("/api/v1/songs");
+  return response.data.data.songs; // Adjust to return the songs array
 };
 
 export const fetchSongApi = async (id: string) => {
-  const response = await axios.get(`/api/v1/songs/${id}`); // Adjust endpoint as necessary
+  const response = await axios.get(`/api/v1/songs/${id}`);
   return response.data;
 };
 
 export const createSongApi = async (song: any) => {
-  const response = await axios.post("/api/v1/songs", song); // Adjust endpoint as necessary
+  const response = await axios.post("/api/v1/songs", song);
   return response.data;
 };
 

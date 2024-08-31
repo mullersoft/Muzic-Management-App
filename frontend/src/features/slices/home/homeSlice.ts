@@ -2,7 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ISong } from "../../types";
+import { ISong } from "../../../types";
 
 // Define the async thunk
 export const fetchSongsAsync = createAsyncThunk(

@@ -1,3 +1,4 @@
+// AdminDashboard.tsx
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import Sidebar from './Sidebar';
@@ -5,6 +6,7 @@ import SongManagement from './SongManagement';
 import GenreManagement from './GenreManagement';
 import ArtistManagement from './ArtistManagement';
 import AlbumManagement from './AlbumManagement';
+import Report from './Report'; 
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -19,20 +21,22 @@ const ContentArea = styled.div`
 `;
 
 const AdminDashboard: React.FC = () => {
-  const [selectedPage, setSelectedPage] = useState<string>('songs');
+  const [selectedPage, setSelectedPage] = useState<string>('report'); // Default to 'report'
 
   const renderContent = () => {
     switch (selectedPage) {
-      // case 'songs':
-      //   return <SongManagement />;
+      case 'songs':
+        return <SongManagement />;
       case 'genres':
         return <GenreManagement />;
       case 'artists':
         return <ArtistManagement />;
       case 'albums':
         return <AlbumManagement />;
-      // default:
-      //   return <SongManagement />;
+      case 'report':
+        return <Report />;
+      default:
+        return <Report />; 
     }
   };
 

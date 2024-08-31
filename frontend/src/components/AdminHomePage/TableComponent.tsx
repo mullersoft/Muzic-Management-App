@@ -65,7 +65,6 @@ const TableComponent: React.FC<TableProps> = ({ columns, data, onEdit, onDelete 
           {data.map((row) => (
             <TableRow key={row._id}>
               {columns.map((column, index) => (
-                // Ensure `row[column]` is not an object; otherwise, render a property or stringify
                 <TableCell key={index}>
                   {typeof row[column] === 'object' ? JSON.stringify(row[column]) : row[column]}
                 </TableCell>

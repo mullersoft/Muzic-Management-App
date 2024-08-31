@@ -26,7 +26,6 @@ const Header: React.FC = () => {
       <NavLinks>
         <Link to="/">Home</Link>
         <Link to="/admin">Admin</Link>
-        <Link to="#">About</Link>
       
 
 
