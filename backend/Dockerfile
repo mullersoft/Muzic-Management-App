@@ -1,26 +1,20 @@
-# Use the official Node.js image as the base image
+# Use the official Node.js image.
 FROM node:18
 
-# Set the working directory in the container
+# Set the working directory in the container.
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files
-COPY package*.json ./
+# Copy package.json and package-lock.json to the working directory.
+COPY backend/package.json backend/package-lock.json ./
 
-# Install the application dependencies
+# Install the application dependencies.
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
+# Copy the rest of the application code.
+COPY backend/ .
 
-# Build the TypeScript code
-RUN npm run build
-
-# Expose the port that the app runs on
+# Expose the port the app runs on.
 EXPOSE 8000
 
-# Set the environment variables file
-ENV NODE_ENV=production
-
-# Define the command to run the application
-CMD ["node", "dist/server.js"]
+# Start the application.
+CMD ["npm", "start"]

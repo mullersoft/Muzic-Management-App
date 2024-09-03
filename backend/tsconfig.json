@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2017", // Update to a more recent ECMAScript version
     "module": "commonjs",
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node", "express"], // Add this to include type definitions for Node.js and Express
+    "lib": ["ES2017", "DOM"] // Include ES2017 or higher and DOM
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
