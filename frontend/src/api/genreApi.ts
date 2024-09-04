@@ -1,7 +1,7 @@
 import axios from "axios";
 import { IGenre } from "../types";
+const API_URL = "https://muzic-management-app.onrender.com"; 
 
-const API_URL = "/api/v1/genres";
 
 export const fetchGenres = async (): Promise<IGenre[]> => {
   const response = await axios.get(API_URL);

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { IArtist } from "../types";
 
-const API_URL = "/api/v1/artists";
+const API_URL = "https://muzic-management-app.onrender.com"; 
+
 
 // Fetch all artists
 export const fetchArtists = async (): Promise<IArtist[]> => {
