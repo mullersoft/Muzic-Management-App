@@ -7,9 +7,12 @@ import genreRoutes from "./routes/genreRoutes";
 import statisticsRoutes from "./routes/statisticsRoutes";
 import AppError from "./utils/appError";
 import globalErrorHandler from "./controllers/errorController";
+import cors from "cors";
 
 const app = express();
 
+// Use CORS middleware
+app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.json({ limit: "10kb" }));
 
@@ -21,11 +24,10 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Routes
 app.use("/api/v1/songs", songRoutes);
-app.use("/api/v1/artists", artistRoutes);;
+app.use("/api/v1/artists", artistRoutes);
 app.use("/api/v1/albums", albumRoutes);
 app.use("/api/v1/genres", genreRoutes);
 app.use("/api/v1/statistics", statisticsRoutes);
-
 
 // Handling unhandled routes
 app.all("*", (req, res, next) => {

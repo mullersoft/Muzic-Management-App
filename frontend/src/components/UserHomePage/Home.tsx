@@ -1,4 +1,3 @@
-// export default HomePage;
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import styled from '@emotion/styled';
@@ -6,6 +5,9 @@ import debounce from 'lodash/debounce';
 import Sidebar from './Sidebar';
 import MainContent from './MainContent';
 import { Song } from '../../types';
+
+// Define the base URL for the API
+const API_URL = "https://muzic-management-app.onrender.com"; 
 
 const Container = styled.div`
   display: flex;
@@ -37,7 +39,8 @@ const Home: React.FC = () => {
       setError(null);
 
       try {
-        const response = await axios.get('/api/v1/songs');
+        // Use the base URL for the API request
+        const response = await axios.get(`${API_URL}/api/v1/songs`);
         const allSongs = response.data.data.songs;
 
         const allArtists = allSongs.flatMap((song: any) => song.artists);
@@ -78,7 +81,8 @@ const Home: React.FC = () => {
             album: selectedAlbums.join(','),
           };
 
-          const response = await axios.get('/api/v1/songs', { params: filters });
+          // Use the base URL for the API request
+          const response = await axios.get(`${API_URL}/api/v1/songs`, { params: filters });
           setSongs(response.data.data?.songs || []);
         } else {
           setSongs([]);
@@ -135,7 +139,8 @@ const Home: React.FC = () => {
           album: selectedAlbums.join(','),
         };
 
-        const response = await axios.get('/api/v1/songs', { params: filters });
+        // Use the base URL for the API request
+        const response = await axios.get(`${API_URL}/api/v1/songs`, { params: filters });
         setSongs(response.data.data?.songs || []);
       } else {
         setSongs([]);
