@@ -40,12 +40,16 @@
   "build:env": "react-scripts build"
 }
 ,
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
+ "eslintConfig": {
+  "extends": [
+    "react-app",
+    "react-app/jest"
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "warn" 
+  }
+}
+,
   "browserslist": {
     "production": [
       ">0.2%",
