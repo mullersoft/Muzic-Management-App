@@ -1,7 +1,10 @@
 import axios from "axios";
 import { IArtist } from "../types";
 
-const API_URL = "https://muzic-management-app.onrender.com"; 
+// const API_URL = "https://muzic-management-app.onrender.com"; 
+// const API_URL = "http://localhost:7000"; 
+// const API_URL = "/api/v1/artists"; 
+const API_URL = "https://muzic-management-app.onrender.com/api/v1/artists";
 
 
 // Fetch all artists

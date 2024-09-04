@@ -2,8 +2,10 @@
 
 import axios from "axios";
 import { Album } from "../types";
+// const API_URL = "http://localhost:7000";
+const API_URL = "https://muzic-management-app.onrender.com/api/v1/albums";
 
-const API_URL = "https://muzic-management-app.onrender.com"; 
+// const API_URL = "/api/v1/albums";
 
 export const fetchAlbums = async (): Promise<Album[]> => {
   const response = await axios.get(API_URL);

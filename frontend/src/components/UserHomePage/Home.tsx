@@ -1,27 +1,31 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
-import styled from '@emotion/styled';
-import debounce from 'lodash/debounce';
-import Sidebar from './Sidebar';
-import MainContent from './MainContent';
-import { Song } from '../../types';
+import React, { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+import styled from "@emotion/styled";
+import debounce from "lodash/debounce";
+import Sidebar from "./Sidebar";
+import MainContent from "./MainContent";
+import { Song } from "../../types";
 
 // Define the base URL for the API
-const API_URL = "https://muzic-management-app.onrender.com"; 
+const API_URL = "https://muzic-management-app.onrender.com";
+
+// const API_URL = "http://localhost:7000";
 
 const Container = styled.div`
   display: flex;
   height: 100vh;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   background-color: #f4f4f4;
 `;
 
 const Home: React.FC = () => {
-  const [search, setSearch] = useState<string>('');
-  const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: boolean }>({
+  const [search, setSearch] = useState<string>("");
+  const [selectedFilters, setSelectedFilters] = useState<{
+    [key: string]: boolean;
+  }>({
     artist: false,
     album: false,
-    genre: false
+    genre: false,
   });
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<string[]>([]);
@@ -44,15 +48,20 @@ const Home: React.FC = () => {
         const allSongs = response.data.data.songs;
 
         const allArtists = allSongs.flatMap((song: any) => song.artists);
-        const allAlbums = allSongs.map((song: any) => song.album).filter(Boolean);
+        const allAlbums = allSongs
+          .map((song: any) => song.album)
+          .filter(Boolean);
         const allGenres = allSongs.flatMap((song: any) => song.genres);
 
-        const uniqueArtists = Array.from(new Set(allArtists.map((artist: any) => artist._id)))
-          .map(id => allArtists.find((artist: any) => artist._id === id));
-        const uniqueAlbums = Array.from(new Set(allAlbums.map((album: any) => album._id)))
-          .map(id => allAlbums.find((album: any) => album._id === id));
-        const uniqueGenres = Array.from(new Set(allGenres.map((genre: any) => genre._id)))
-          .map(id => allGenres.find((genre: any) => genre._id === id));
+        const uniqueArtists = Array.from(
+          new Set(allArtists.map((artist: any) => artist._id))
+        ).map((id) => allArtists.find((artist: any) => artist._id === id));
+        const uniqueAlbums = Array.from(
+          new Set(allAlbums.map((album: any) => album._id))
+        ).map((id) => allAlbums.find((album: any) => album._id === id));
+        const uniqueGenres = Array.from(
+          new Set(allGenres.map((genre: any) => genre._id))
+        ).map((id) => allGenres.find((genre: any) => genre._id === id));
 
         setArtists(uniqueArtists || []);
         setAlbums(uniqueAlbums || []);
@@ -73,16 +82,23 @@ const Home: React.FC = () => {
       setError(null);
 
       try {
-        if (query || selectedArtists.length || selectedGenres.length || selectedAlbums.length) {
+        if (
+          query ||
+          selectedArtists.length ||
+          selectedGenres.length ||
+          selectedAlbums.length
+        ) {
           const filters: Record<string, string> = {
             title: query,
-            artist: selectedArtists.join(','),
-            genre: selectedGenres.join(','),
-            album: selectedAlbums.join(','),
+            artist: selectedArtists.join(","),
+            genre: selectedGenres.join(","),
+            album: selectedAlbums.join(","),
           };
 
           // Use the base URL for the API request
-          const response = await axios.get(`${API_URL}/api/v1/songs`, { params: filters });
+          const response = await axios.get(`${API_URL}/api/v1/songs`, {
+            params: filters,
+          });
           setSongs(response.data.data?.songs || []);
         } else {
           setSongs([]);
@@ -110,19 +126,25 @@ const Home: React.FC = () => {
 
   const handleGenreChange = (genre: string) => {
     setSelectedGenres((prevGenres) =>
-      prevGenres.includes(genre) ? prevGenres.filter((g) => g !== genre) : [...prevGenres, genre]
+      prevGenres.includes(genre)
+        ? prevGenres.filter((g) => g !== genre)
+        : [...prevGenres, genre]
     );
   };
 
   const handleArtistChange = (artist: string) => {
     setSelectedArtists((prevArtists) =>
-      prevArtists.includes(artist) ? prevArtists.filter((a) => a !== artist) : [...prevArtists, artist]
+      prevArtists.includes(artist)
+        ? prevArtists.filter((a) => a !== artist)
+        : [...prevArtists, artist]
     );
   };
 
   const handleAlbumChange = (album: string) => {
     setSelectedAlbums((prevAlbums) =>
-      prevAlbums.includes(album) ? prevAlbums.filter((a) => a !== album) : [...prevAlbums, album]
+      prevAlbums.includes(album)
+        ? prevAlbums.filter((a) => a !== album)
+        : [...prevAlbums, album]
     );
   };
 
@@ -131,16 +153,23 @@ const Home: React.FC = () => {
     setError(null);
 
     try {
-      if (search || selectedArtists.length || selectedGenres.length || selectedAlbums.length) {
+      if (
+        search ||
+        selectedArtists.length ||
+        selectedGenres.length ||
+        selectedAlbums.length
+      ) {
         const filters: Record<string, string> = {
           title: search,
-          artist: selectedArtists.join(','),
-          genre: selectedGenres.join(','),
-          album: selectedAlbums.join(','),
+          artist: selectedArtists.join(","),
+          genre: selectedGenres.join(","),
+          album: selectedAlbums.join(","),
         };
 
         // Use the base URL for the API request
-        const response = await axios.get(`${API_URL}/api/v1/songs`, { params: filters });
+        const response = await axios.get(`${API_URL}/api/v1/songs`, {
+          params: filters,
+        });
         setSongs(response.data.data?.songs || []);
       } else {
         setSongs([]);
@@ -153,7 +182,7 @@ const Home: React.FC = () => {
   };
 
   const handleClear = () => {
-    setSearch('');
+    setSearch("");
     setSelectedFilters({ artist: false, album: false, genre: false });
     setSelectedGenres([]);
     setSelectedArtists([]);

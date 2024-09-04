@@ -1,7 +1,11 @@
 // src/api/songApi.ts
 
 import axios from "axios";
-const API_URL = "https://muzic-management-app.onrender.com"; 
+// const API_URL = "https://muzic-management-app.onrender.com"; 
+// const API_URL = "http://localhost:7000"; 
+// const API_URL = "/api/v1/songs"; 
+const API_URL = "https://muzic-management-app.onrender.com/api/v1/songs";
+
 
 // Existing API functions
 export const fetchSongsApi = async () => {
