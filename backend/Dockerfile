@@ -1,10 +1,10 @@
-# Use an official Node.js runtime as the base image
-FROM node:18-alpine
+# Use the official Node.js image as a base image
+FROM node:18
 
-# Set the working directory inside the container
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json files
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
@@ -16,11 +16,13 @@ COPY . .
 # Build the TypeScript code
 RUN npm run build
 
+# Set environment variables
+ENV PORT=8000
+ENV DATABASE_ATLAS=mongodb+srv://mulersoft:Linger1221@muziccluster.vtmuf.mongodb.net/MuzicManageer
+ENV NODE_ENV=development
+
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Define environment variables
-ENV NODE_ENV=production
-
-# Start the application
-CMD ["npm", "run", "start"]
+# Command to run the app
+CMD ["npm", "start"]
