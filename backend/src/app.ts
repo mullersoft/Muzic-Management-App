@@ -10,12 +10,13 @@ import globalErrorHandler from "./controllers/errorController";
 import cors from "cors";
 
 const app = express();
-// Use CORS middleware with specific configuration
-const allowedOrigins = ['https://main--eclectic-croquembouche-8330e2.netlify.app/'];
+
+// Define allowed origins
+const allowedOrigins = ['https://main--eclectic-croquembouche-8330e2.netlify.app'];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (origin === undefined || allowedOrigins.indexOf(origin) !== -1) {
+    if (origin === undefined || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -43,6 +44,7 @@ app.use("/api/v1/statistics", statisticsRoutes);
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
+
 // Global error handling middleware
 app.use(globalErrorHandler);
 
