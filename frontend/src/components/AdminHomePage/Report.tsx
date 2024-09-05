@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+const API_URL = "https://muzic-management-app.onrender.com";
 
 // Styled components
 const ReportContainer = styled.div`
@@ -52,7 +53,7 @@ const Report: React.FC = () => {
   useEffect(() => {
     const fetchStatistics = async () => {
       try {
-        const response = await axios.get('/api/v1/statistics');
+        const response = await axios.get(`${API_URL}/api/v1/statistics`);
         setStatistics(response.data.data);
       } catch (error) {
         console.error('Error fetching statistics:', error);

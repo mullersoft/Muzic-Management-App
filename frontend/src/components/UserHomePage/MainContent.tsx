@@ -1,6 +1,7 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import { Song } from '../../types';
+import React from "react";
+import styled from "@emotion/styled";
+import { Song } from "../../types";
+const API_URL = "https://muzic-management-app.onrender.com";
 
 const MainContentContainer = styled.div`
   flex: 1;
@@ -49,11 +50,20 @@ const MainContent: React.FC<MainContentProps> = ({ songs }) => {
           {songs.map((song) => (
             <SongCard key={song._id}>
               <SongTitle>{song.title}</SongTitle>
-              <SongInfo>Artists: {song.artists.map((artist: any) => artist.name).join(', ')}</SongInfo>
-              <SongInfo>Genres: {song.genres.map((genre: any) => genre.name).join(', ')}</SongInfo>
-              <SongInfo>Album: {song.album ? song.album.name : 'N/A'}</SongInfo>
+              <SongInfo>
+                Artists:{" "}
+                {song.artists.map((artist: any) => artist.name).join(", ")}
+              </SongInfo>
+              <SongInfo>
+                Genres: {song.genres.map((genre: any) => genre.name).join(", ")}
+              </SongInfo>
+              <SongInfo>Album: {song.album ? song.album.name : "N/A"}</SongInfo>
               <AudioPlayer controls>
-                <source src={`/${song.fileUrl}`} type="audio/mp3" />
+                <source
+                  src={`${API_URL}/uploads/${song.fileUrl}`}
+                  type="audio/mp3"
+                />
+                {/* <source src={`/${song.fileUrl}`} type="audio/mp3" /> */}
                 Your browser does not support the audio element.
               </AudioPlayer>
             </SongCard>

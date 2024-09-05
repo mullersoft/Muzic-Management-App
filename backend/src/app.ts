@@ -12,7 +12,9 @@ import cors from "cors";
 const app = express();
 
 // Use CORS middleware
-app.use(cors());
+app.use(cors({
+  origin: '*', // or specify the frontend URL if you want to restrict access
+}));
 // Middleware to parse JSON bodies
 app.use(express.json({ limit: "10kb" }));
 
