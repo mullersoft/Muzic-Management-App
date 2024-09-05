@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { Song } from "../../types";
-const API_URL = "https://muzic-management-app.onrender.com";
+// const API_URL = "https://muzic-management-app.onrender.com";
 
 const MainContentContainer = styled.div`
   flex: 1;
@@ -60,10 +60,9 @@ const MainContent: React.FC<MainContentProps> = ({ songs }) => {
               <SongInfo>Album: {song.album ? song.album.name : "N/A"}</SongInfo>
               <AudioPlayer controls>
                 <source
-                  src={`${API_URL}/uploads/${song.fileUrl}`}
+                  src={`https://muzic-management-app.onrender.com/uploads/${song.fileUrl}`}
                   type="audio/mp3"
                 />
-                {/* <source src={`/${song.fileUrl}`} type="audio/mp3" /> */}
                 Your browser does not support the audio element.
               </AudioPlayer>
             </SongCard>
