@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState,useMemo } from "react";
 import axios from "axios";
 import styled from "@emotion/styled";
 import debounce from "lodash/debounce";
@@ -8,7 +8,6 @@ import { Song } from "../../types";
 
 // Define the base URL for the API
 const API_URL = "https://muzic-management-app.onrender.com";
-
 // const API_URL = "http://localhost:7000";
 
 const Container = styled.div`
@@ -76,41 +75,45 @@ const Home: React.FC = () => {
     fetchInitialData();
   }, []);
 
-  const debouncedSearch = useCallback(
-    debounce(async (query: string) => {
-      setLoading(true);
-      setError(null);
+  // import { useMemo } from "react"; // Add useMemo import
 
-      try {
-        if (
-          query ||
-          selectedArtists.length ||
-          selectedGenres.length ||
-          selectedAlbums.length
-        ) {
-          const filters: Record<string, string> = {
-            title: query,
-            artist: selectedArtists.join(","),
-            genre: selectedGenres.join(","),
-            album: selectedAlbums.join(","),
-          };
-
-          // Use the base URL for the API request
-          const response = await axios.get(`${API_URL}/api/v1/songs`, {
-            params: filters,
-          });
-          setSongs(response.data.data?.songs || []);
-        } else {
-          setSongs([]);
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (query: string) => {
+        setLoading(true);
+        setError(null);
+  
+        try {
+          if (
+            query ||
+            selectedArtists.length ||
+            selectedGenres.length ||
+            selectedAlbums.length
+          ) {
+            const filters: Record<string, string> = {
+              title: query,
+              artist: selectedArtists.join(","),
+              genre: selectedGenres.join(","),
+              album: selectedAlbums.join(","),
+            };
+  
+            // Use the base URL for the API request
+            const response = await axios.get(`${API_URL}/api/v1/songs`, {
+              params: filters,
+            });
+            setSongs(response.data.data?.songs || []);
+          } else {
+            setSongs([]);
+          }
+        } catch (err: any) {
+          setError(`Failed to fetch songs. Error: ${err.message}`);
+        } finally {
+          setLoading(false);
         }
-      } catch (err: any) {
-        setError(`Failed to fetch songs. Error: ${err.message}`);
-      } finally {
-        setLoading(false);
-      }
-    }, 300),
-    [selectedArtists, selectedGenres, selectedAlbums]
+      }, 300),
+    [selectedArtists, selectedGenres, selectedAlbums] // Dependencies
   );
+  
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
