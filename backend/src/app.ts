@@ -7,14 +7,14 @@ import genreRoutes from "./routes/genreRoutes";
 import statisticsRoutes from "./routes/statisticsRoutes";
 import AppError from "./utils/appError";
 import globalErrorHandler from "./controllers/errorController";
-// import cors from "cors";
+import cors from "cors";
 
 const app = express();
 
 // Use CORS middleware
-// app.use(cors({
-//   origin: '*', // or specify the frontend URL if you want to restrict access
-// }));
+app.use(cors({
+  origin: '*', // or specify the frontend URL if you want to restrict access
+}));
 // Middleware to parse JSON bodies
 app.use(express.json({ limit: "10kb" }));
 
