@@ -10,11 +10,19 @@ import globalErrorHandler from "./controllers/errorController";
 import cors from "cors";
 
 const app = express();
+// Use CORS middleware with specific configuration
+const allowedOrigins = ['https://main--eclectic-croquembouche-8330e2.netlify.app/'];
 
-// Use CORS middleware
 app.use(cors({
-  origin: '*', // or specify the frontend URL if you want to restrict access
+  origin: (origin, callback) => {
+    if (origin === undefined || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 }));
+
 // Middleware to parse JSON bodies
 app.use(express.json({ limit: "10kb" }));
 
