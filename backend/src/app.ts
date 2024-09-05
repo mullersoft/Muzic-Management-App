@@ -11,19 +11,8 @@ import cors from "cors";
 
 const app = express();
 
-// Define allowed origins
-const allowedOrigins = ['https://main--eclectic-croquembouche-8330e2.netlify.app'];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (origin === undefined || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
-}));
-
+// Use CORS middleware
+app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.json({ limit: "10kb" }));
 
@@ -44,7 +33,6 @@ app.use("/api/v1/statistics", statisticsRoutes);
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
-
 // Global error handling middleware
 app.use(globalErrorHandler);
 
