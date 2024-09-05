@@ -11,8 +11,10 @@ import cors from "cors";
 
 const app = express();
 
-// Use CORS middleware
-app.use(cors());
+app.use(cors({
+  origin: '*', // or specify your frontend URL if security is a concern
+}));
+
 // Middleware to parse JSON bodies
 app.use(express.json({ limit: "10kb" }));
 
