@@ -24,7 +24,7 @@ export const updateAlbum = async (
   id: string,
   album: Partial<Omit<Album, "_id" | "createdAt" | "updatedAt">>
 ): Promise<Album> => {
-  const response = await axios.put(`${API_URL}/${id}`, album);
+  const response = await axios.patch(`${API_URL}/${id}`, album);
   return response.data;
 };
 
