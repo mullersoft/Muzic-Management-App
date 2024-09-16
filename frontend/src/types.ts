@@ -45,11 +45,12 @@ export interface IAlbum {
   releaseDate?: string; // Optional field for release date
 }
 
+// src/types.ts
 export interface Album {
   _id: string;
   name: string;
-  songs: string[]; // Array of song IDs
-  artists: string[]; // Array of artist IDs
+  songs: string[]; // or your specific song type
+  artists: string[]; // or your specific artist type
   createdAt: string;
   updatedAt: string;
 }

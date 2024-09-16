@@ -50,7 +50,6 @@ export const createSong = catchAsync(
 );
 
 
-
 export const listSongs = catchAsync(async (req: Request, res: Response) => {
   const { title, artist, genre, album } = req.query;
 

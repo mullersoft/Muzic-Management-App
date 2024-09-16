@@ -1,28 +1,23 @@
+// src/components/AdminHomePage/AlbumManagement.tsx
 import React, { useState, useEffect } from 'react';
 import Table from './Table';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAlbumsStart, createAlbumStart, updateAlbumStart, deleteAlbumStart } from '../../features/slices/albumSlice';
 import { Album } from '../../types';
-import { fetchAlbums, createAlbum, updateAlbum, deleteAlbum } from '../../api/albumApi';
+import { RootState } from '../../store';
 
 const columns = ['name'];
 
 const AlbumManagement: React.FC = () => {
-  const [albums, setAlbums] = useState<Album[]>([]);
-  const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
+  const dispatch = useDispatch();
+  const albums = useSelector((state: RootState) => state.albums.albums);
   const [newAlbumName, setNewAlbumName] = useState('');
+  const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // Fetch albums from the API
-    const loadAlbums = async () => {
-      try {
-        const data = await fetchAlbums();
-        setAlbums(data);
-      } catch (error) {
-        console.error('Error fetching albums:', error);
-      }
-    };
-    loadAlbums();
-  }, []);
+    dispatch(fetchAlbumsStart());
+  }, [dispatch]);
 
   const handleEdit = (item: { _id: string }) => {
     const album = albums.find(album => album._id === item._id);
@@ -33,46 +28,32 @@ const AlbumManagement: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteAlbum(id);
-      setAlbums(albums.filter(album => album._id !== id));
-    } catch (error) {
-      console.error('Error deleting album:', error);
-    }
+  const handleDelete = (id: string) => {
+    dispatch(deleteAlbumStart(id));
   };
 
-  const handleSave = async () => {
-    const albumData = {
+  const handleSave = () => {
+    const albumData: Omit<Album, '_id' | 'createdAt' | 'updatedAt'> = {
       name: newAlbumName,
-      songs: [], // Provide empty array or default value
-      artists: [] // Provide empty array or default value
+      songs: [],
+      artists: [],
     };
 
     if (isEditing && editingAlbum) {
-      try {
-        const updatedAlbum = await updateAlbum(editingAlbum._id, albumData);
-        setAlbums(albums.map(album => (album._id === updatedAlbum._id ? updatedAlbum : album)));
-        setEditingAlbum(null);
-        setIsEditing(false);
-      } catch (error) {
-        console.error('Error updating album:', error);
-      }
+      dispatch(updateAlbumStart({ id: editingAlbum._id, data: albumData }));
+      setIsEditing(false);
+      setEditingAlbum(null);
     } else {
-      try {
-        const newAlbum = await createAlbum(albumData);
-        setAlbums([...albums, newAlbum]);
-        setNewAlbumName('');
-      } catch (error) {
-        console.error('Error creating album:', error);
-      }
+      dispatch(createAlbumStart(albumData));
     }
+
+    setNewAlbumName('');
   };
 
   return (
     <div style={{ padding: '20px' }}>
       <h2>Manage Albums</h2>
-      
+
       <div style={{ marginBottom: '20px' }}>
         <h3>{isEditing ? 'Edit Album' : 'Create New Album'}</h3>
         <input
