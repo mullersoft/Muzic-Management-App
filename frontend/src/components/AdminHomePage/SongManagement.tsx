@@ -1,4 +1,4 @@
-// frontend\src\components\AdminHomePage\SongManagement.tsx:
+// frontend\src\components\AdminHomePage\SongManagement.tsx
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Table from "./Table";
@@ -6,8 +6,8 @@ import { RootState, AppDispatch } from "../../store";
 import { ISong, IAlbum, IArtist, IGenre } from "../../types";
 import {
   fetchSongsRequest,
-  addSong,
-  updateSong,
+  addSong, // Import addSong to use for adding songs
+  updateSong, // Import updateSong to use for updating songs
   deleteSong,
 } from "../../features/slices/songSlice";
 import { fetchAlbums } from "../../api/albumApi";
@@ -75,23 +75,6 @@ const SongManagement: React.FC = () => {
     dispatch(deleteSong(id));
   };
 
-  const uploadFile = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await axios.post("/api/v1/songs", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response.data.fileUrl; // Assuming the response contains the file URL
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      throw error;
-    }
-  };
-
   const handleSave = async () => {
     const formData = new FormData();
     formData.append("title", newSongTitle);
@@ -116,6 +99,7 @@ const SongManagement: React.FC = () => {
             },
           }
         );
+        dispatch(updateSong(response.data)); // Dispatch updateSong action
         console.log(response.data);
       } else {
         const response = await axios.post("/api/v1/songs", formData, {
@@ -123,6 +107,7 @@ const SongManagement: React.FC = () => {
             "Content-Type": "multipart/form-data",
           },
         });
+        dispatch(addSong(response.data)); // Dispatch addSong action
         console.log(response.data);
       }
 
