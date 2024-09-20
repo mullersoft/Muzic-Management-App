@@ -55,7 +55,7 @@ const MainContent: React.FC<MainContentProps> = ({ songs }) => {
               <SongInfo>Genres: {song.genres.map((genre: any) => genre.name).join(', ')}</SongInfo>
               <SongInfo>Album: {song.album ? song.album.name : 'N/A'}</SongInfo>
               <AudioPlayer controls>
-  <source src={`https://muzic-management-app.onrender.com/uploads/${song.fileUrl}`} type="audio/mp3" />
+  <source src={`https://muzic-management-app.onrender.com/${song.fileUrl}`} type="audio/mp3" />
   Your browser does not support the audio element.
 </AudioPlayer>
 
