@@ -26,7 +26,7 @@ export const updateArtist = async (
   id: string,
   artist: Partial<Omit<IArtist, "_id">>
 ): Promise<IArtist> => {
-  const response = await axios.put(`${API_URL}/${id}`, artist);
+  const response = await axios.patch(`${API_URL}/${id}`, artist);
   return response.data;
 };
 

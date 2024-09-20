@@ -23,7 +23,7 @@ export const updateGenre = async (
   id: string,
   genre: Partial<Omit<IGenre, "_id">>
 ): Promise<IGenre> => {
-  const response = await axios.put(`${API_URL}/${id}`, genre);
+  const response = await axios.patch(`${API_URL}/${id}`, genre);
   return response.data;
 };
 

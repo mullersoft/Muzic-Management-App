@@ -1,59 +1,52 @@
-// // src/store/slices/songSlice.ts
-// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import axios from "axios";
-// import { Song } from "../../types/song";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ISong } from '../../types';
 
-// const API_URL = "http://localhost:5000/songs"; // Adjust as needed
+interface SongState {
+  songs: ISong[];
+  status: 'idle' | 'loading' | 'failed';
+}
 
-// interface SongsState {
-//   songs: Song[];
-//   status: "idle" | "loading" | "succeeded" | "failed";
-//   error: string | null;
-// }
+const initialState: SongState = {
+  songs: [],
+  status: 'idle',
+};
 
-// const initialState: SongsState = {
-//   songs: [],
-//   status: "idle",
-//   error: null,
-// };
+const songSlice = createSlice({
+  name: 'songs',
+  initialState,
+  reducers: {
+    fetchSongsRequest: (state) => {
+      state.status = 'loading';
+    },
+    fetchSongsSuccess: (state, action: PayloadAction<ISong[]>) => {
+      state.songs = action.payload;
+      state.status = 'idle';
+    },
+    fetchSongsFailure: (state) => {
+      state.status = 'failed';
+    },
+    addSong: (state, action: PayloadAction<ISong>) => {
+      state.songs.push(action.payload);
+    },
+    updateSong: (state, action: PayloadAction<ISong>) => {
+      const index = state.songs.findIndex((song) => song._id === action.payload._id);
+      if (index !== -1) {
+        state.songs[index] = action.payload;
+      }
+    },
+    deleteSong: (state, action: PayloadAction<string>) => {
+      state.songs = state.songs.filter((song) => song._id !== action.payload);
+    },
+  },
+});
 
-// export const fetchSongsThunk = createAsyncThunk(
-//   "songs/fetchSongs",
-//   async () => {
-//     const response = await axios.get(API_URL);
-//     return response.data;
-//   }
-// );
+export const {
+  fetchSongsRequest,
+  fetchSongsSuccess,
+  fetchSongsFailure,
+  addSong,
+  updateSong,
+  deleteSong,
+} = songSlice.actions;
 
-// export const createSongThunk = createAsyncThunk(
-//   "songs/createSong",
-//   async (song: Omit<Song, "id">) => {
-//     const response = await axios.post(API_URL, song);
-//     return response.data;
-//   }
-// );
-
-// const songSlice = createSlice({
-//   name: "songs",
-//   initialState,
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchSongsThunk.pending, (state) => {
-//         state.status = "loading";
-//       })
-//       .addCase(fetchSongsThunk.fulfilled, (state, action) => {
-//         state.status = "succeeded";
-//         state.songs = action.payload;
-//       })
-//       .addCase(fetchSongsThunk.rejected, (state, action) => {
-//         state.status = "failed";
-//         state.error = action.error.message || "Failed to fetch songs";
-//       })
-//       .addCase(createSongThunk.fulfilled, (state, action) => {
-//         state.songs.push(action.payload);
-//       });
-//   },
-// });
-
-// export default songSlice.reducer;
+export default songSlice.reducer;

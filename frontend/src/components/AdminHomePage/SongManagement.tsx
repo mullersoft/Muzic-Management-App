@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from "react";
+// frontend\src\components\AdminHomePage\SongManagement.tsx:
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Table from "./Table";
+import { RootState, AppDispatch } from "../../store";
 import { ISong, IAlbum, IArtist, IGenre } from "../../types";
 import {
-  fetchSongsApi,
-  createSongApi,
-  updateSongApi,
-  deleteSongApi,
-} from "../../api/songApi";
+  fetchSongsRequest,
+  addSong,
+  updateSong,
+  deleteSong,
+} from "../../features/slices/songSlice";
 import { fetchAlbums } from "../../api/albumApi";
 import { fetchArtists } from "../../api/artistApi";
 import { fetchGenres } from "../../api/genreApi";
+import axios from "axios"; // Import axios for making HTTP requests
 
 const columns = ["title"];
 
 const SongManagement: React.FC = () => {
-  const [songs, setSongs] = useState<ISong[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const songs = useSelector((state: RootState) => state.songs.songs);
   const [albums, setAlbums] = useState<IAlbum[]>([]);
   const [artists, setArtists] = useState<IArtist[]>([]);
   const [genres, setGenres] = useState<IGenre[]>([]);
@@ -30,23 +35,11 @@ const SongManagement: React.FC = () => {
     undefined
   );
   const [isEditing, setIsEditing] = useState(false);
+  const [file, setFile] = useState<File | null>(null); // Add state for file
 
   useEffect(() => {
-    // Fetch songs from the API
-    const loadSongs = async () => {
-      try {
-        const data = await fetchSongsApi();
-        if (Array.isArray(data)) {
-          setSongs(data);
-        } else {
-          console.error("Data is not an array:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching songs:", error);
-      }
-    };
+    dispatch(fetchSongsRequest());
 
-    // Fetch albums, artists, and genres from the API
     const loadOptions = async () => {
       try {
         const [albumsData, artistsData, genresData] = await Promise.all([
@@ -63,9 +56,8 @@ const SongManagement: React.FC = () => {
       }
     };
 
-    loadSongs();
     loadOptions();
-  }, []);
+  }, [dispatch]);
 
   const handleEdit = (item: { _id: string }) => {
     const song = songs.find((song) => song._id === item._id);
@@ -79,53 +71,70 @@ const SongManagement: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
+    dispatch(deleteSong(id));
+  };
+
+  const uploadFile = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
     try {
-      await deleteSongApi(id);
-      setSongs(songs.filter((song) => song._id !== id));
+      const response = await axios.post("/api/v1/songs", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data.fileUrl; // Assuming the response contains the file URL
     } catch (error) {
-      console.error("Error deleting song:", error);
+      console.error("Error uploading file:", error);
+      throw error;
     }
   };
 
   const handleSave = async () => {
-    const songData = {
-      title: newSongTitle,
-      album: selectedAlbum,
-      artists: [selectedArtist].filter(Boolean),
-      genres: [selectedGenre].filter(Boolean),
-    };
-
-    if (isEditing && editingSong) {
-      try {
-        if (!editingSong._id) {
-          throw new Error("Song ID is undefined");
-        }
-        const updatedSong = await updateSongApi(editingSong._id, songData);
-        setSongs(
-          songs.map((song) =>
-            song._id === updatedSong._id ? updatedSong : song
-          )
-        );
-        setEditingSong(null);
-        setIsEditing(false);
-      } catch (error) {
-        console.error("Error updating song:", error);
+    const formData = new FormData();
+    formData.append("title", newSongTitle);
+    formData.append("album", selectedAlbum || "");
+    formData.append("artists", selectedArtist || "");
+    formData.append("genres", selectedGenre || "");
+  
+    if (file) {
+      formData.append("fileUrl", file); // Add the file to formData
+    }
+  
+    try {
+      if (isEditing && editingSong) {
+        if (!editingSong._id) throw new Error("Song ID is undefined");
+  
+        const response = await axios.put(`/api/v1/songs/${editingSong._id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(response.data);
+      } else {
+        const response = await axios.post("/api/v1/songs", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(response.data);
       }
-    } else {
-      try {
-        const newSong = await createSongApi(songData);
-        setSongs([...songs, newSong]);
-        setNewSongTitle("");
-        setSelectedAlbum(undefined);
-        setSelectedArtist(undefined);
-        setSelectedGenre(undefined);
-      } catch (error) {
-        console.error("Error creating song:", error);
-      }
+  
+      // Reset form data after saving
+      setNewSongTitle("");
+      setSelectedAlbum(undefined);
+      setSelectedArtist(undefined);
+      setSelectedGenre(undefined);
+      setFile(null);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving song:", error);
     }
   };
-
+  
+  
   return (
     <div style={{ padding: "20px" }}>
       <h2>Manage Songs</h2>
@@ -175,6 +184,15 @@ const SongManagement: React.FC = () => {
             </option>
           ))}
         </select>
+        <input
+          type="file"
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              setFile(e.target.files[0]);
+            }
+          }}
+          style={{ marginRight: "10px" }}
+        />
         <button onClick={handleSave}>
           {isEditing ? "Save Changes" : "Create Song"}
         </button>

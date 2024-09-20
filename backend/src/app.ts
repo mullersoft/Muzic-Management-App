@@ -15,6 +15,9 @@ app.use(cors({
   origin: '*', // or specify your frontend URL if security is a concern
 }));
 
+
+
+
 // Middleware to parse JSON bodies
 app.use(express.json({ limit: "10kb" }));
 

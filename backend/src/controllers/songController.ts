@@ -1,3 +1,4 @@
+// backend\src\controllers\songController.ts:
 import { Request, Response, NextFunction } from "express";
 import fs from "fs";
 import path from "path";
@@ -12,42 +13,41 @@ import AppError from "../utils/appError";
 // Middleware to handle file upload
 export const uploadFile = upload.single("fileUrl"); // Ensure field name matches
 
-export const createSong = catchAsync(
-  async (req, res, next) => {
-    if (!req.file) {
-      return next(new AppError("No file uploaded!", 404));
-    }
+export const createSong = catchAsync(async (req, res, next) => {
+  try {
     const { title, artists, album, genres } = req.body;
+    
+    if (!req.file) {
+      return next(new AppError("No file uploaded!", 400)); // Changed to 400 Bad Request
+    }
+
     const fileUrl = req.file.path;
 
-    // Create a new song record
     const newSong = await Song.create({
       title,
-      artists, // Expecting an array of artist IDs
-      album, // Album ID
-      genres, // Expecting an array of genre IDs
+      artists,
+      album,
+      genres,
       fileUrl,
     });
 
-    // Add the song reference to the related artists and album
-    await Artist.updateMany(
-      { _id: { $in: artists } },
-      { $push: { songs: newSong._id } }
-    );
+    // Add the song reference to the related artists, album, and genres
+    await Artist.updateMany({ _id: { $in: artists } }, { $push: { songs: newSong._id } });
     if (album) {
       await Album.findByIdAndUpdate(album, { $push: { songs: newSong._id } });
     }
-    await Genre.updateMany(
-      { _id: { $in: genres } },
-      { $push: { songs: newSong._id } }
-    );
+    await Genre.updateMany({ _id: { $in: genres } }, { $push: { songs: newSong._id } });
 
     res.status(201).json({
       status: "success",
       data: { newSong },
     });
+  } catch (error) {
+    console.error("Error creating song:", error); // Add more logging here
+    return next(new AppError("Something went wrong while creating the song", 500)); // General 500 error for unexpected cases
   }
-);
+});
+
 
 
 export const listSongs = catchAsync(async (req: Request, res: Response) => {

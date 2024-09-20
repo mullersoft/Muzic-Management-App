@@ -1,84 +1,53 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../../store';
 import Table from './Table';
 import { IArtist } from '../../types';
-import { fetchArtists, createArtist, updateArtist, deleteArtist } from '../../api/artistApi';
+import { 
+  fetchArtistsRequest, 
+  createArtistRequest, 
+  updateArtistRequest, 
+  deleteArtistRequest, 
+  setEditingArtist, 
+  clearEditingArtist 
+} from '../../features/slices/artistSlice';
 
 const columns = ['name'];
 
 const ArtistManagement: React.FC = () => {
-  const [artists, setArtists] = useState<IArtist[]>([]);
-  const [editingArtist, setEditingArtist] = useState<IArtist | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const { artists, editingArtist, isEditing } = useSelector((state: RootState) => state.artists);
   const [newArtistName, setNewArtistName] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // Fetch artists from the API
-    const loadArtists = async () => {
-      try {
-        const data = await fetchArtists();
-        // Ensure data is an array
-        if (Array.isArray(data)) {
-          setArtists(data);
-        } else {
-          console.error('Data is not an array:', data);
-        }
-      } catch (error) {
-        console.error('Error fetching artists:', error);
-      }
-    };
-    loadArtists();
-  }, []);
+    dispatch(fetchArtistsRequest());
+  }, [dispatch]);
 
   const handleEdit = (item: { _id: string }) => {
     const artist = artists.find(artist => artist._id === item._id);
     if (artist) {
-      setEditingArtist(artist);
+      dispatch(setEditingArtist(artist));
       setNewArtistName(artist.name);
-      setIsEditing(true);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteArtist(id);
-      setArtists(artists.filter(artist => artist._id !== id));
-    } catch (error) {
-      console.error('Error deleting artist:', error);
-    }
+  const handleDelete = (id: string) => {
+    dispatch(deleteArtistRequest(id));
   };
 
-  const handleSave = async () => {
-    const artistData = {
-      name: newArtistName
-    };
-
+  const handleSave = () => {
     if (isEditing && editingArtist) {
-      try {
-        if (!editingArtist._id) {
-          throw new Error('Artist ID is undefined');
-        }
-        const updatedArtist = await updateArtist(editingArtist._id, artistData);
-        setArtists(artists.map(artist => (artist._id === updatedArtist._id ? updatedArtist : artist)));
-        setEditingArtist(null);
-        setIsEditing(false);
-      } catch (error) {
-        console.error('Error updating artist:', error);
-      }
+      dispatch(updateArtistRequest({ _id: editingArtist._id!, name: newArtistName }));
     } else {
-      try {
-        const newArtist = await createArtist(artistData);
-        setArtists([...artists, newArtist]);
-        setNewArtistName('');
-      } catch (error) {
-        console.error('Error creating artist:', error);
-      }
+      dispatch(createArtistRequest({ name: newArtistName }));
     }
+    setNewArtistName('');
+    dispatch(clearEditingArtist());
   };
 
   return (
     <div style={{ padding: '20px' }}>
       <h2>Manage Artists</h2>
-      
       <div style={{ marginBottom: '20px' }}>
         <h3>{isEditing ? 'Edit Artist' : 'Create New Artist'}</h3>
         <input
@@ -92,13 +61,12 @@ const ArtistManagement: React.FC = () => {
           {isEditing ? 'Save Changes' : 'Create Artist'}
         </button>
         {isEditing && (
-          <button onClick={() => setIsEditing(false)} style={{ marginLeft: '10px' }}>
+          <button onClick={() => dispatch(clearEditingArtist())} style={{ marginLeft: '10px' }}>
             Cancel
           </button>
         )}
       </div>
-
-      <Table columns={columns} data={Array.isArray(artists) ? artists : []} onEdit={handleEdit} onDelete={handleDelete} />
+      <Table data={artists} columns={columns} onEdit={handleEdit} onDelete={handleDelete} />
     </div>
   );
 };
