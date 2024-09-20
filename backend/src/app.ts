@@ -26,9 +26,7 @@ app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false }));
 
 // Serve static files from the 'uploads' directory
-// Serve static files from the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-
 // Notify users to use the frontend entry point
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send(`

@@ -1,4 +1,3 @@
-// frontend\src\components\UserHomePage\MainContent.tsx
 import React from 'react';
 import styled from '@emotion/styled';
 import { Song } from '../../types';
@@ -41,7 +40,7 @@ const AudioPlayer = styled.audio`
 interface MainContentProps {
   songs: Song[];
 }
-// const API_URL = "https://muzic-management-app.onrender.com";
+const API_URL = "https://muzic-management-app.onrender.com";
 
 const MainContent: React.FC<MainContentProps> = ({ songs }) => {
   return (
@@ -55,11 +54,9 @@ const MainContent: React.FC<MainContentProps> = ({ songs }) => {
               <SongInfo>Genres: {song.genres.map((genre: any) => genre.name).join(', ')}</SongInfo>
               <SongInfo>Album: {song.album ? song.album.name : 'N/A'}</SongInfo>
               <AudioPlayer controls>
-  <source src={`https://muzic-management-app.onrender.com/${song.fileUrl}`} type="audio/mp3" />
-  Your browser does not support the audio element.
-</AudioPlayer>
-
-
+                <source src={`${API_URL}/uploads/${song.fileUrl}`} type="audio/mp3" />
+                Your browser does not support the audio element.
+              </AudioPlayer>
             </SongCard>
           ))}
         </div>
