@@ -26,7 +26,23 @@ app.use(express.urlencoded({ extended: false }));
 
 // Serve static files from the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+// Notify users to use the frontend entry point
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).send(`
+    <h1>Welcome to Music App API Developed by Mulugeta Linger!</h1>
+    <p>Please visit our frontend application at <a href="https://eclectic-croquembouche-8330e2.netlify.app/" target="_blank">https://eclectic-croquembouche-8330e2.netlify.app/</a> to use the full application.</p>
+    <p>API Documentation is available at the respective endpoints:</p>
+    <ul>
+      <li><a href="/api/v1/songs">Songs API</a></li>
+      <li><a href="/api/v1/artists">Artists API</a></li>
+      <li><a href="/api/v1/albums">Albums API</a></li>
+      <li><a href="/api/v1/genres">Genres API</a></li>
+      <li><a href="/api/v1/statistics">Statistics API</a></li>
 
+
+    </ul>
+  `);
+});
 // Routes
 app.use("/api/v1/songs", songRoutes);
 app.use("/api/v1/artists", artistRoutes);
