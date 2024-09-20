@@ -108,7 +108,7 @@ const SongManagement: React.FC = () => {
       if (isEditing && editingSong) {
         if (!editingSong._id) throw new Error("Song ID is undefined");
 
-        const response = await axios.put(
+        const response = await axios.patch(
           `${API_URL}/api/v1/songs/${editingSong._id}`,
           formData,
           {
