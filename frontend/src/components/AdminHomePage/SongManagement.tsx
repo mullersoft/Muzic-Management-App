@@ -99,17 +99,17 @@ const SongManagement: React.FC = () => {
     formData.append("album", selectedAlbum || "");
     formData.append("artists", selectedArtist || "");
     formData.append("genres", selectedGenre || "");
-
+  
     if (file) {
-      formData.append("fileUrl", file); // Add the file to formData
+      formData.append("file", file); // Correct the key to "file"
     }
-
+  
     try {
       if (isEditing && editingSong) {
         if (!editingSong._id) throw new Error("Song ID is undefined");
-
+  
         const response = await axios.patch(
-          `${API_URL}/api/v1/songs/${editingSong._id}`,
+          `${API_URL}/api/v1/songs/${editingSong._id}`, // Ensure full API URL
           formData,
           {
             headers: {
@@ -119,14 +119,14 @@ const SongManagement: React.FC = () => {
         );
         console.log(response.data);
       } else {
-        const response = await axios.post("/api/v1/songs", formData, {
+        const response = await axios.post(`${API_URL}/api/v1/songs`, formData, { // Ensure full API URL
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
         console.log(response.data);
       }
-
+  
       // Reset form data after saving
       setNewSongTitle("");
       setSelectedAlbum(undefined);
@@ -138,6 +138,7 @@ const SongManagement: React.FC = () => {
       console.error("Error saving song:", error);
     }
   };
+  
 
   return (
     <div style={{ padding: "20px" }}>

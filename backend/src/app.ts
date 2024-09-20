@@ -1,3 +1,4 @@
+// backend\src\app.ts
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import songRoutes from "./routes/songRoutes";
