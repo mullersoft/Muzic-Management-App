@@ -14,7 +14,8 @@ import { fetchAlbums } from "../../api/albumApi";
 import { fetchArtists } from "../../api/artistApi";
 import { fetchGenres } from "../../api/genreApi";
 import axios from "axios"; // Import axios for making HTTP requests
-const API_URL = "https://muzic-management-app.onrender.com/api/v1/songs";
+const API_URL = "https://muzic-management-app.onrender.com";
+
 const columns = ["title"];
 
 const SongManagement: React.FC = () => {
@@ -80,7 +81,7 @@ const SongManagement: React.FC = () => {
     formData.append("file", file);
 
     try {
-      const response = await axios.post(`${API_URL}`, formData, {
+      const response = await axios.post(`${API_URL}/api/v1/songs`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -108,7 +109,7 @@ const SongManagement: React.FC = () => {
         if (!editingSong._id) throw new Error("Song ID is undefined");
 
         const response = await axios.put(
-          `${API_URL}/${editingSong._id}`,
+          `${API_URL}/api/v1/songs/${editingSong._id}`,
           formData,
           {
             headers: {

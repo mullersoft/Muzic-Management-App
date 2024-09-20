@@ -6,7 +6,9 @@ export interface ISong {
   artists: string[];
   genres: string[];
   album?: string;
+  fileUrl?: string; // Add this here if it's part of the song data
 }
+
 
 export interface Song {
   _id: string;
