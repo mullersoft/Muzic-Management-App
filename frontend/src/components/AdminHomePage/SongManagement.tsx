@@ -194,13 +194,8 @@ const SongManagement: React.FC = () => {
               setFile(e.target.files[0]);
             }
           }}
-          style={{
-            marginRight: "10px",
-            display: "block",
-            border: "1px solid red",
-          }}
+          style={{ marginRight: "10px" }}
         />
-
         <button onClick={handleSave}>
           {isEditing ? "Save Changes" : "Create Song"}
         </button>
